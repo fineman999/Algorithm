@@ -1,19 +1,22 @@
+from collections import deque
 def solution(people, limit):
-    people.sort()
-    print(people)
-    cnt = 0
-    sum_person = 0
-    member = 0
-    for person in people:
-        sum_person += person
-        member += 1
-        if sum_person > limit or member > 2:
-            cnt += 1
-            sum_person = person
-            member = 1
+    people.sort(reverse=True)
+    people = deque(people)
+    answer = 0
 
-    cnt += 1
-    return cnt
+    while people:
+        most_weight = people.popleft()
+        try:
+
+            little_weight = people.pop()
+            weight = most_weight + little_weight
+            answer += 1
+            if weight > limit:
+                people.append(little_weight)
+        except:
+            answer += 1
+
+    return answer
 
 
 
