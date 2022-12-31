@@ -18,34 +18,38 @@ def solution(expression):
     #1
     for i in range(len(expression)):
         if not expression[i].isdigit():
-            numbers.append(number)
+            numbers.append(int(number))
             number = ""
             numbers.append(expression[i])
             operation.add(expression[i])
         else:
             number += expression[i]
-
-    permutations = itertools.permutations(operation, 3)
+    numbers.append(int(number))
+    permutations = itertools.permutations(operation, len(operation))
     result = 0
     for permutation in permutations:
-        expression_no = numbers
+        expression_no = deque(numbers)
+
         for per in permutation:
-            j = 0
-            while j < len(expression_no):
-                if per == expression_no[j]:
-                    get_operator_result = operator(int(expression_no[j-1]),int(expression_no[j+1],expression_no[j]))
-                    if j+2 > len(expression_no):
-                        expression_no = [get_operator_result]
-                        # j =
+            stack = deque()
+            while expression_no:
+                popleft = expression_no.popleft()
+                if not stack:
+                    stack.append(popleft)
+                else:
+                    if popleft == per:
+                        stack_pop = stack.pop()
+                        no_popleft = expression_no.popleft()
+                        operator1 = operator(stack_pop, no_popleft, popleft)
+                        stack.append(operator1)
                     else:
-                        expression_no = [get_operator_result] + expression_no[j + 2]
-
-
-    answer = 0
-    return answer
+                        stack.append(popleft)
+            expression_no = stack
+        result = max(result,abs(expression_no.popleft()))
+    return result
 
 def main():
-    print(solution("100-200*300-500+20"))
+    print(solution("50*6-3*2"))
 
 
 if __name__ == "__main__":
