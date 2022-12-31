@@ -48,6 +48,7 @@ def solution(expression):
         result = max(result,abs(expression_no.popleft()))
     return result
 
+
 def main():
     print(solution("50*6-3*2"))
 
