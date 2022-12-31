@@ -8,7 +8,7 @@ def solution(w,h):
         return w*h-w
     big_w = w
     big_h = h
-
+    #
     lcm = divide(w,h)
     w = w // lcm
     h = h // lcm
