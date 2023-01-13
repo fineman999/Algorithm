@@ -26,46 +26,40 @@ def change(u):
             change_u += "("
     return change_u
 
+def numberOne(p):
+
+    u_left = 0
+    u_right = 0
+    u = ""
+    v = ""
+    for i in range(len(p)):
+        if p[i] == "(":
+            u_left += 1
+        else:
+            u_right += 1
+        if u_right == u_left:
+            u = p[:i + 1]
+            v = p[i + 1:]
+            break
+    return u, v
+def recursive(p):
+    # 1
+    if p == "":
+        return p
+    # 2
+    (u,v) = numberOne(p)
+
+    # 3
+    if check_right(u):
+        return u + recursive(v)
+    # 4
+        # 4-1,4-2,4-3
+    bean_str = "(" + recursive(v) + ")"
+    change_u = change(u[1:-1])
+    return bean_str + change_u
 
 def solution(p):
-    answer = ''
-    # 1
-
-    u_final = ""
-    v_final = ""
-    while True:
-        if p == "":
-            return u_final+p
-        u_left = 0
-        u_right = 0
-        u = ""
-        v = ""
-        # 2
-        for i in range(len(p)):
-            if p[i] == "(":
-                u_left += 1
-            else:
-                u_right += 1
-            if u_right == u_left:
-                u = p[:i+1]
-                v = p[i+1:]
-                break
-        # 3
-        valid = check_right(u)
-        if valid:
-            if check_right(v):
-                return u_final + p
-            u_final += u
-            p = v
-            continue
-        # 4
-        else:
-            # 4-1,4-2,4-3
-            bean_str = "(" + v + ")"
-            change_u = change(u[1:-1])
-            answer = u_final + bean_str + change_u
-            break
-    return answer
+    return recursive(p)
 
 def main():
     print(solution("(()())()"))
