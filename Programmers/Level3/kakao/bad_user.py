@@ -18,9 +18,7 @@ def dfs(n, user_id, dictionary, visited):
                     new_dictionary[key] -= 1
                     new_visited = copy.deepcopy(visited)
                     new_visited[i] = True
-                    visited[i] = True
                     dfs(n, user_id, new_dictionary, new_visited)
-                    visited[i] = False
     return
 
 def check_banned_valid(user, banned):
