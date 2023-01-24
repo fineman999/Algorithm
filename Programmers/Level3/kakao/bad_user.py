@@ -13,7 +13,7 @@ def dfs(n, user_id, dictionary, visited):
     for i in range(len(user_id)):
         if not visited[i]:
             for key,value in dictionary.items():
-                if dictionary[key]>0 and check_banned_valid(user_id[i], key):
+                if dictionary[key] > 0 and check_banned_valid(user_id[i], key):
                     new_dictionary = copy.deepcopy(dictionary)
                     new_dictionary[key] -= 1
                     new_visited = copy.deepcopy(visited)
@@ -41,14 +41,8 @@ def solution(user_id, banned_id):
             dictionary[i] = 1
         else:
             dictionary[i] += 1
-    for i in range(len(user_id)):
-        for key,value in dictionary.items():
-            if dictionary[key] > 0 and check_banned_valid(user_id[i],key):
-                visited = [False] * len(user_id)
-                new_dictionary = copy.deepcopy(dictionary)
-                new_dictionary[key] -= 1
-                visited[i] = True
-                dfs(n, user_id, new_dictionary, visited)
+    visited = [False] * len(user_id)
+    dfs(n, user_id, dictionary, visited)
 
     return len(result)
 
