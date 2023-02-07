@@ -1,8 +1,5 @@
 import math
 from collections import deque
-result = math.inf
-
-
 dp = []
 
 
@@ -10,22 +7,19 @@ def bfs(x, y, n):
     q = deque()
     global dp
     dp[x] = 0
-    q.append([x, dp[x]])
-
+    q.append(x)
     while q:
-
-        [x, cnt] = q.popleft()
+        x = q.popleft()
         if x < y:
-            cnt += 1
-            if x + n <= y and (dp[x + n] == math.inf or cnt < dp[x + n]):
-                dp[x+n] = cnt
-                q.append([x + n, cnt])
-            if x * 2 <= y and (dp[x * 2] == math.inf or cnt < dp[x * 2]):
-                dp[x * 2] = cnt
-                q.append([x * 2, cnt])
-            if x * 3 <= y and (dp[x * 3] == math.inf or cnt < dp[x * 3]):
-                dp[x * 3] = cnt
-                q.append([x * 3, cnt])
+            if x + n <= y and (dp[x + n] == math.inf or dp[x] + 1 < dp[x + n]):
+                dp[x + n] = dp[x] + 1
+                q.append(x + n)
+            if x * 2 <= y and (dp[x * 2] == math.inf or dp[x] + 1 < dp[x * 2]):
+                dp[x * 2] = dp[x] + 1
+                q.append(x * 2)
+            if x * 3 <= y and (dp[x * 3] == math.inf or dp[x] + 1 < dp[x * 3]):
+                dp[x * 3] = dp[x] + 1
+                q.append(x * 3)
 
 
 def solution(x, y, n):
