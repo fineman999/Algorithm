@@ -13,54 +13,63 @@ def up_down(change_alphabet: str):
     for i in range(1, len(alphabets)):
         if alphabets[-i] == change_alphabet:
             down = i
+            break
     return min(up, down)
 
 
-result = math.inf
-
-
 def dfs(start, visited, cnt):
-    visited[start] = True
     if False not in visited:
-        global result
-        # print(visited)
-        # print(cnt)
-        result = min(result, cnt)
-        return
+        return cnt
+
+    answer = math.inf
     check = 1
     left = start - 1
-    right = start + 1
+
+    # 왼쪽으로 최소값
     while check < len(visited):
         if left <= -len(visited):
             left = 0
-        if right >= len(visited):
-            right = 0
         if not visited[left]:
-            dfs(left, visited, cnt + check)
-        if not visited[right]:
-            dfs(right, visited, cnt + check)
+            visited[left] = True
+            answer = min(dfs(left, visited, cnt + check), answer)
+            visited[left] = False
+            break
         check += 1
         left -= 1
+
+    # 오른쪽으로 최소값
+    check = 1
+    right = start + 1
+    while check < len(visited):
+        if right >= len(visited):
+            right = 0
+        if not visited[right]:
+            visited[right] = True
+            answer = min(dfs(right, visited, cnt + check), answer)
+            visited[right] = False
+            break
+        check += 1
         right += 1
-    visited[start] = False
+
+    return answer
 
 
 def solution(name):
     answer = 0
-    start_name = 'A' * len(name)
     visited = [False] * len(name)
     for i in range(len(visited)):
         if name[i] == 'A':
             visited[i] = True
         else:
             answer += up_down(name[i])
-    dfs(0, visited, 0)
+    visited[0] = True
+    answer += dfs(0, visited, 0)
 
-    return answer + result
+    return answer
 
 
 def main():
-    print(solution("JAN"))
+    print(solution("BBBAAB"))
 
 
 if __name__ == "__main__":
