@@ -10,49 +10,32 @@ def rotated(a):
     return result
 
 
-def direction(queue, game_board, x, y, direct):
+def direction(queue, game_board, x, y, direct, cnt):
     dx = [1, 0, -1, 0]
     dy = [0, 1, 0, -1]
-    secret = ["R", "D", "L", "U"]
-    for i in range(4):
-        nx = x + dx[i]
-        ny = y + dy[i]
-        if -1 < ny < len(game_board) and -1 < nx < len(game_board[0]) and game_board[ny][nx] == 0:
-            game_board[ny][nx] = 1
-            direct.append(secret[i])
-            queue.append((nx, ny))
-
-def table_direction(queue, game_board, x, y, direct, cnt):
-    dx = [1, 0, -1, 0]
-    dy = [0, 1, 0, -1]
-    secret = ["R", "D", "L", "U"]
+    # secret = ["R", "D", "L", "U"]
     for i in range(4):
         nx = x + dx[i]
         ny = y + dy[i]
         if -1 < ny < len(game_board) and -1 < nx < len(game_board[0]) and game_board[ny][nx] == 0:
             game_board[ny][nx] = cnt
-            direct.append(secret[i])
+            direct.append((nx, ny))
             queue.append((nx, ny))
 
-def table_bfs(game_board, q, cnt):
-    direct = ['S']
-    while q:
-        (x, y) = q.popleft()
-        table_direction(q, game_board, x, y, direct, cnt)
-    return direct
 
-def bfs(game_board, q):
-    direct = ['S']
+def bfs(game_board, q, cnt):
+    direct = [(q[0][0], q[0][1])]
     while q:
         (x, y) = q.popleft()
-        direction(q, game_board, x, y, direct)
+        direction(q, game_board, x, y, direct, cnt)
+    direct.sort(key=lambda x:(x[0],x[1]))
     return direct
 
 
 def change_table(new_table, check_cnt):
     for i in range(len(new_table)):
         for j in range(len(new_table[i])):
-            if new_table[i][j] == 1 or new_table[i][j] in check_cnt:
+            if new_table[i][j] in check_cnt:
                 new_table[i][j] = 1
             else:
                 new_table[i][j] = 0
@@ -60,59 +43,52 @@ def change_table(new_table, check_cnt):
 
 def init(game_board, table):
     q = deque()
-    diary = defaultdict(int)
+    diary = []
+
     for i in range(len(game_board)):
         for j in range(len(game_board[i])):
             if game_board[i][j] == 0:
                 q.append((j, i))
                 game_board[i][j] = 1
-                direct = bfs(game_board, q)
-                diary["".join(direct)] += 1
-    # print(diary)
+                direct = bfs(game_board, q, 1)
+                diary.append(direct)
+
     answer = 0
 
     for k in range(4):
-
         new_table = copy.deepcopy(table)
+
         check_cnt = set()
+        check_cnt.add(1)
         cnt = 2
-        # for i in range(len(new_table)):
-        #     kkk = []
-        #     for j in range(len(new_table[i])):
-        #         kkk.append(new_table[i][j])
-        #     print(kkk)
-        # print()
+
         for i in range(len(new_table)):
             for j in range(len(new_table[i])):
                 if new_table[i][j] == 0:
                     q.append((j, i))
                     new_table[i][j] = cnt
-                    compare = table_bfs(new_table, q, cnt)
-                    check = "".join(compare)
-                    if check in diary:
-                        check_cnt.add(cnt)
-                        diary[check] -= 1
-                        answer += len(check)
-                        if diary[check] == 0:
-                            del diary[check]
+                    check = bfs(new_table, q, cnt)
+                    valid = True
+                    # print(check)
+                    for element in diary:
+                        if len(check) == len(element):
+                            # print(element)
+                            x_cal = abs(check[0][0] - element[0][0])
+                            y_cal = abs(check[0][1] - element[0][1])
+                            for h in range(1, len(element)):
+                                if abs(element[h][0] - check[h][0]) != x_cal \
+                                        or abs(element[h][1] - check[h][1]) != y_cal:
+                                    valid = False
+                                    break
+                            if valid:
+                                diary.remove(element)
+                                check_cnt.add(cnt)
+                                answer += len(check)
+                                break
                     cnt += 1
-        # print(check_cnt)
-        # for i in range(len(new_table)):
-        #     kkk = []
-        #     for j in range(len(new_table[i])):
-        #         kkk.append(new_table[i][j])
-        #     print(kkk)
-        # print()
 
         new_table = change_table(new_table, check_cnt)
-        # for i in range(len(new_table)):
-        #     kkk = []
-        #     for j in range(len(new_table[i])):
-        #         kkk.append(new_table[i][j])
-        #     print(kkk)
-        # print()
         table = rotated(new_table)
-
     return answer
 
 
@@ -129,10 +105,7 @@ def solution(game_board, table):
 
 
 def main():
-    print(solution([[1, 1, 0, 0, 1, 0], [0, 0, 1, 0, 1, 0], [0, 1, 1, 0, 0, 1], [1, 1, 0, 1, 1, 1], [1, 0, 0, 0, 1, 0],
-                    [0, 1, 1, 1, 0, 0]],
-                   [[1, 0, 0, 1, 1, 0], [1, 0, 1, 0, 1, 0], [0, 1, 1, 0, 1, 1], [0, 0, 1, 0, 0, 0], [1, 1, 0, 1, 1, 0],
-                    [0, 1, 0, 0, 0, 0]]))
+    print(solution([[1, 1, 0, 0, 1, 0], [0, 0, 1, 0, 1, 0], [0, 1, 1, 0, 0, 1], [1, 1, 0, 1, 1, 1], [1, 0, 0, 0, 1, 0], [0, 1, 1, 1, 0, 0]], [[1, 0, 0, 1, 1, 0], [1, 0, 1, 0, 1, 0], [0, 1, 1, 0, 1, 1], [0, 0, 1, 0, 0, 0], [1, 1, 0, 1, 1, 0], [0, 1, 0, 0, 0, 0]]))
 
 
 if __name__ == "__main__":
