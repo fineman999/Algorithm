@@ -13,7 +13,6 @@ def rotated(a):
 def direction(queue, game_board, x, y, direct, cnt):
     dx = [1, 0, -1, 0]
     dy = [0, 1, 0, -1]
-    # secret = ["R", "D", "L", "U"]
     for i in range(4):
         nx = x + dx[i]
         ny = y + dy[i]
