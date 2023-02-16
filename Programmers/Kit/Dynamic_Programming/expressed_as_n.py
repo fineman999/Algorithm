@@ -1,46 +1,35 @@
-import math
-from collections import deque
-
-
-def dfs(N, now, visited, number, cnt):
-    if cnt > 8:
-        print(now)
-        visited[now] = -1
-        return
-    if now < 1:
-        return
-
-    if visited[now] < cnt:
-        return
-
-    visited[now] = cnt
-
-
-    # 더하기
-
-    dfs(N, now + N, visited, number, cnt + 1)
-    # 빼기
-    dfs(N, now - N, visited, number, cnt + 1)
-    # 나누기
-    dfs(N, now // N, visited, number, cnt + 1)
-    if not all(str(N) == i for i in list(map(str,str(now)))):
-        dfs(N, int(str(N)+str(now)), visited, number, cnt + 1)
+from collections import defaultdict
 
 
 def solution(N, number):
-    answer = 0
-    visited = [math.inf]*(32_001)
-    visited[1] = 2
-    visited[N] = 1
-    arr = 123
-    print(list(map(str,str(arr))))
-    now = N
-    dfs(N, now, visited, number, 1)
-    print(visited)
-    return answer
+    dp = defaultdict(set)
+    dp[1].add(N)
+    for i in range(2, 10):
+        dp[i].add(N**i)
+
+    for i in range(1, 10):
+        for j in range(1, 10):
+            if i + j > 9:
+                continue
+            for h in dp[i]:
+                for u in dp[j]:
+                    dp[i + j].add(h * u)
+                    if h - u > 0:
+                        dp[i + j].add(h - u)
+                    if u > 0:
+                        dp[i + j].add(h // u)
+                    dp[i + j].add(h + u)
+                    if all(str(N) == cha for cha in list(map(str, str(h)))) \
+                            and all(str(N) == cha for cha in list(map(str, str(u)))):
+                        dp[i+j].add(int(str(h)+str(u)))
+
+    for i in range(1, 10):
+        if number in dp[i]:
+            return i
+    return -1
 
 def main():
-    print(solution(5,	12))
+    print(solution(8,	5800))
 
 
 if __name__ == "__main__":
