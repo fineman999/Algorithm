@@ -1,4 +1,4 @@
-from collections import deque, defaultdict
+from collections import deque
 import copy
 def rotated(a):
     n = len(a)
@@ -10,31 +10,25 @@ def rotated(a):
     return result
 
 
-def direction(queue, game_board, x, y, direct, cnt, depth):
+def direction(queue, graph, x, y, direct, cnt):
     dx = [1, 0, -1, 0]
     dy = [0, 1, 0, -1]
-    # secret = ["R", "D", "L", "U"]
     for i in range(4):
         nx = x + dx[i]
         ny = y + dy[i]
-        if -1 < ny < len(game_board) and -1 < nx < len(game_board[0]) and game_board[ny][nx] == 0:
-            game_board[ny][nx] = cnt
-            direct.append([depth, nx, ny])
+        if -1 < ny < len(graph) and -1 < nx < len(graph[0]) and graph[ny][nx] == 0:
+            graph[ny][nx] = cnt
+            direct.append([nx, ny])
             queue.append((nx, ny))
 
 
-def bfs(game_board, q, cnt):
-    direct = [[0, q[0][0], q[0][1]]]
-    depth = 1
+def bfs(graph, q, cnt):
+    direct = [[q[0][0], q[0][1]]]
     while q:
         (x, y) = q.popleft()
-        direction(q, game_board, x, y, direct, cnt, depth)
-        depth += 1
-    min_check = [direct[0][1], direct[0][2]]
-    # direct.sort(key=lambda x: (x[1], x[2], x[0]))
-    direct = [(a, b-min_check[0], c-min_check[1]) for a, b, c in direct]
-
-    # direct.sort()
+        direction(q, graph, x, y, direct, cnt)
+    # 시작을 0,0으로 고정 하기
+    direct = [(b-direct[0][0], c-direct[0][1]) for b, c in direct]
     return direct
 
 
@@ -60,48 +54,28 @@ def init(game_board, table):
                 diary.append(direct)
 
     answer = 0
-    # print(diary)
     for k in range(4):
         new_table = copy.deepcopy(table)
-        # print("start")
-        # for ele in table:
-        #     print(ele)
         check_cnt = set()
         check_cnt.add(1)
         cnt = 2
-
         for i in range(len(new_table)):
             for j in range(len(new_table[i])):
                 if new_table[i][j] == 0:
                     q.append((j, i))
                     new_table[i][j] = cnt
-                    # print("cnt",cnt)
                     check = bfs(new_table, q, cnt)
                     if check in diary:
-                        # print("valid")
-                        # print(check)
                         diary.remove(check)
                         check_cnt.add(cnt)
                         answer += len(check)
-                        break
-                    # else:
-                    #     print("not valid")
-                    #     print(check)
                 cnt += 1
-        # for ele in new_table:
-        #     print(ele)
         table = change_table(new_table, check_cnt)
-        # for ele in table:
-        #     print(ele)
         table = rotated(table)
-    #     print("end")
-    # print()
-    # print(diary)
     return answer
 
 
 def solution(game_board, table):
-    answer = -1
     for i in range(len(table)):
         for j in range(len(table[i])):
             if table[i][j] == 1:
