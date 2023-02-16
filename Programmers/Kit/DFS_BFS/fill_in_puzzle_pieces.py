@@ -10,24 +10,31 @@ def rotated(a):
     return result
 
 
-def direction(queue, game_board, x, y, direct, cnt):
+def direction(queue, game_board, x, y, direct, cnt, depth):
     dx = [1, 0, -1, 0]
     dy = [0, 1, 0, -1]
+    # secret = ["R", "D", "L", "U"]
     for i in range(4):
         nx = x + dx[i]
         ny = y + dy[i]
         if -1 < ny < len(game_board) and -1 < nx < len(game_board[0]) and game_board[ny][nx] == 0:
             game_board[ny][nx] = cnt
-            direct.append((nx, ny))
+            direct.append([depth, nx, ny])
             queue.append((nx, ny))
 
 
 def bfs(game_board, q, cnt):
-    direct = [(q[0][0], q[0][1])]
+    direct = [[0, q[0][0], q[0][1]]]
+    depth = 1
     while q:
         (x, y) = q.popleft()
-        direction(q, game_board, x, y, direct, cnt)
-    direct.sort(key=lambda x:(x[0],x[1]))
+        direction(q, game_board, x, y, direct, cnt, depth)
+        depth += 1
+    min_check = [direct[0][1], direct[0][2]]
+    # direct.sort(key=lambda x: (x[1], x[2], x[0]))
+    direct = [(a, b-min_check[0], c-min_check[1]) for a, b, c in direct]
+
+    # direct.sort()
     return direct
 
 
@@ -53,10 +60,12 @@ def init(game_board, table):
                 diary.append(direct)
 
     answer = 0
-
+    # print(diary)
     for k in range(4):
         new_table = copy.deepcopy(table)
-
+        # print("start")
+        # for ele in table:
+        #     print(ele)
         check_cnt = set()
         check_cnt.add(1)
         cnt = 2
@@ -66,28 +75,28 @@ def init(game_board, table):
                 if new_table[i][j] == 0:
                     q.append((j, i))
                     new_table[i][j] = cnt
+                    # print("cnt",cnt)
                     check = bfs(new_table, q, cnt)
-                    valid = True
-                    # print(check)
-                    for element in diary:
-                        if len(check) == len(element):
-                            # print(element)
-                            x_cal = abs(check[0][0] - element[0][0])
-                            y_cal = abs(check[0][1] - element[0][1])
-                            for h in range(1, len(element)):
-                                if abs(element[h][0] - check[h][0]) != x_cal \
-                                        or abs(element[h][1] - check[h][1]) != y_cal:
-                                    valid = False
-                                    break
-                            if valid:
-                                diary.remove(element)
-                                check_cnt.add(cnt)
-                                answer += len(check)
-                                break
-                    cnt += 1
-
-        new_table = change_table(new_table, check_cnt)
-        table = rotated(new_table)
+                    if check in diary:
+                        # print("valid")
+                        # print(check)
+                        diary.remove(check)
+                        check_cnt.add(cnt)
+                        answer += len(check)
+                        break
+                    # else:
+                    #     print("not valid")
+                    #     print(check)
+                cnt += 1
+        # for ele in new_table:
+        #     print(ele)
+        table = change_table(new_table, check_cnt)
+        # for ele in table:
+        #     print(ele)
+        table = rotated(table)
+    #     print("end")
+    # print()
+    # print(diary)
     return answer
 
 
@@ -101,6 +110,8 @@ def solution(game_board, table):
                 table[i][j] = 1
     answer = init(game_board, table)
     return answer
+
+
 
 
 def main():
