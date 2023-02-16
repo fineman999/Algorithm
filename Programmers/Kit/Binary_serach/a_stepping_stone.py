@@ -23,30 +23,12 @@ def binary_search(rocks, start, end, n):
             check_rocks += 1
     if check_distance > 0:
         dist.append(check_distance)
-    # print("dist", dist)
-    # for i in range(1, len(rocks)):
-    #     dist.append(rocks[i] - rocks[i-1])
-    #
-    # new_dist = []
-    # for i in range(len(dist)):
-    #     check_distance += dist[i]
-    #     check_rocks += 1
-    #     if check_distance > mid:
-    #         check_distance -= dist[i]
-    #         new_dist.append(check_distance)
-    #         check_distance = dist[i]
-    #         check_rocks -= 1
-    #     if check_rocks > n:
-    #         new_dist.append(check_distance)
-    #         new_dist += dist[i+1:]
-    #         break
-    # print("new_dst", new_dist)
 
     if check_rocks == n:
         global answer
         result = min(dist)
         answer = max(answer, result)
-    if check_rocks >= n:
+    if check_rocks > n:
         binary_search(rocks, start, mid - 1, n)
     else:
         binary_search(rocks, mid + 1, end, n)
@@ -56,6 +38,11 @@ def solution(distance, rocks, n):
     rocks.sort()
     rocks.insert(0, 0)
     rocks.append(distance)
+    dist = []
+    for i in range(1, len(rocks)):
+        dist.append(rocks[i]-rocks[i-1])
+    global answer
+    answer = min(dist)
     end = distance
     binary_search(rocks, 0, end, n)
     return answer
