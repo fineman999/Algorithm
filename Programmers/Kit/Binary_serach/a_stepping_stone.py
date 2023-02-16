@@ -33,7 +33,6 @@ def binary_search(rocks, start, end, n):
     else:
         binary_search(rocks, mid + 1, end, n)
 
-
 def solution(distance, rocks, n):
     rocks.sort()
     rocks.insert(0, 0)
