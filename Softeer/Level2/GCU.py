@@ -29,7 +29,10 @@ def main():
     for i in range(M):
         tests.append(list(map(int, sys.stdin.readline().split())))
     answer = solution(N, M, roads, tests)
-    print(answer)
+    if answer < 0:
+        print(0)
+    else:
+        print(answer)
 
 
 if __name__ == "__main__":
