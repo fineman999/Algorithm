@@ -1,25 +1,23 @@
+
+
 def solution(s, skip, index):
+    alphabets = [chr(i) for i in range(97, 123)]
 
-    answer = ''
+    skip = set(skip)
+    alphabets = set(alphabets)
+    alphabets -= skip
 
+    alphabets = sorted(alphabets)
+    length  = len(alphabets)
+    answer = ""
+    diary = {alpha: idx for idx, alpha in enumerate(alphabets)}
     for i in range(len(s)):
-        j = 0
-        check = ord(s[i])
-        while j < index:
-            check += 1
-            if check > 122:
-                check -= 26
-            if chr(check) not in skip:
-                j += 1
-
-        if check > 122:
-            check -= 26
-        answer += chr(check)
+        answer += alphabets[(diary[s[i]] + index)%length]
 
     return answer
 
 def main():
-    print(solution(	"ybcde", "az", 1))
+    print(solution(	"aukks", "wbqd", 5))
 
 if __name__ == "__main__":
     main()
