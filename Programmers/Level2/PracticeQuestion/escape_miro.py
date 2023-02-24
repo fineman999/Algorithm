@@ -1,27 +1,30 @@
 from collections import deque
 import copy
 
+check = {'E': 'L', 'L': 'E'}
+
 
 def direction(x, y, maps, q, end):
     dx = [0, 1, 0, -1]
     dy = [1, 0, -1, 0]
     cnt = 0
     find_end = False
+
     for i in range(4):
         nx = dx[i] + x
         ny = dy[i] + y
         if -1 < ny < len(maps) and -1 < nx < len(maps[ny]):
-            if maps[ny][nx] == 'O':
+            if maps[ny][nx] == check[end] or maps[ny][nx] == 'O' or maps[ny][nx] == 'S':
                 q.append((nx, ny))
-                # visited[ny][nx] = True
                 maps[ny][nx] = maps[y][x] + 1
-                # cnt += 1
+
+
             elif maps[ny][nx] == end:
-                # cnt += 1
                 maps[ny][nx] = maps[y][x] + 1
                 cnt = maps[ny][nx]
                 find_end = True
                 break
+
     return (cnt, find_end)
 
 
