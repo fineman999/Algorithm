@@ -1,6 +1,5 @@
 import sys
 
-result = 0
 def solution(n):
     dp = [0]*10
     dp[-1] = 1
