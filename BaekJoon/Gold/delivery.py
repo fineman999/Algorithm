@@ -36,16 +36,33 @@ def bfs(start, graph, q, M):
 
 def solution(N, M, graph):
     combi = []
+    house = []
     answer = math.inf
     for i in range(N):
         for j in range(N):
             if graph[i][j] == 2:
                 combi.append((j,i))
+            if graph[i][j] == 1:
+                house.append((j, i))
     for element in combinations(combi, M):
-        new_graph = copy.deepcopy(graph)
-        q = deque(element)
+        cnt = 0
+        for dx, dy in house:
+            count = math.inf
+            for x, y in element:
+                check = abs(x - dx) + abs(y - dy)
+                if check < count:
+                    count = check
+            cnt += count
 
-        answer = min(answer, bfs(element, new_graph, q, M))
+        answer = min(answer, cnt)
+
+
+
+
+        # new_graph = copy.deepcopy(graph)
+        # q = deque(element)
+        #
+        # answer = min(answer, bfs(element, new_graph, q, M))
 
     return answer
 
