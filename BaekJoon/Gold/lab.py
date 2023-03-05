@@ -37,29 +37,44 @@ def bfs(graph, q, virus):
         result = cnt
 
 
-def wall(N, M, graph, cnt, q):
+def wall(N, M, graph, cnt, q, start):
     if cnt == 3:
         new_graph= copy.deepcopy(graph)
         new_q = copy.deepcopy(q)
         bfs(new_graph, new_q, len(q))
         return
-    for i in range(N):
-        for j in range(M):
-            if graph[i][j] == 0:
-                graph[i][j] = 1
-                wall(N, M, graph, cnt + 1, q)
-                graph[i][j] = 0
+    # for i in range(x, N):
+    #     for j in range(y, M):
+    #         if graph[i][j] == 0:
+    #             graph[i][j] = 1
+    #             wall(N, M, graph, cnt + 1, q, i, j)
+    #             graph[i][j] = 0
+    for i in range(start, N*M):
+        x = int(i%M)
+        y = int(i/M)
+        if graph[y][x] == 0:
+            graph[y][x] = 1
+            wall(N, M, graph, cnt + 1, q, i + 1)
+            graph[y][x] = 0
+
+
 
 
 def solution(N, M, graph):
     arr = []
     q = deque()
+    # for i in range(0, N*M):
+    #     x = int(i%M)
+    #     y = int(i/M)
+    #     print(i, x, y)
+    #     print(graph[y][x])
+
     for i in range(N):
         for j in range(M):
             if graph[i][j] == 2:
                 q.append((j,i))
 
-    wall(N, M, graph, 0, q)
+    wall(N, M, graph, 0, q,0)
 
     return answer
 
