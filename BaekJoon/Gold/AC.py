@@ -33,12 +33,7 @@ def main():
     for i in range(T):
         p = list(sys.stdin.readline().split()[0])
         n = int(sys.stdin.readline())
-
-        check = sys.stdin.readline().split()[0]
-        check_2 = check.split('[')[1]
-        check_3 = check_2.split(']')[0]
-        check_4 = list(check_3.split(','))
-        arr = check_4
+        arr = sys.stdin.readline().rstrip()[1:-1].split(",")
         answer.append(solution(p, n, arr))
 
     for ele in answer:
