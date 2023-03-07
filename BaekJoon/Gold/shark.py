@@ -58,7 +58,6 @@ def bfs(graph, N, q):
             answer += length
             q = deque()
             q.append((0, nx, ny))
-
     return answer
 
 def solution(N, graph):
