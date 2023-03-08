@@ -6,14 +6,11 @@ def solution(basic, explode):
     n = len(explode)
     i = 0
     while i < len(basic):
-
         stack.append(basic[i])
-
         if "".join(stack[-n:]) == explode:
             for _ in range(n):
                 stack.pop()
         i += 1
-    # print(stack)
 
     answer = "".join(list(stack))
     if answer == '':
