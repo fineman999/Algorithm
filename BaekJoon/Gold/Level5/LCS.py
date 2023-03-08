@@ -22,7 +22,7 @@ def solution_case_two(str1, str2):
                 check = dp[j]
             elif str1[j - 1] == str2[i - 1]:
                 dp[j] = check + 1
-        # print(dp)
+
     print(max(dp))
 
 
