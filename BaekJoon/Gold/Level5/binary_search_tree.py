@@ -38,13 +38,31 @@ class BinaryTree(object):
         print(node.data)
 
 
+def get_postorder(arr):
+
+    if len(arr) <= 1:
+        return arr
+    # print(arr)
+    root = arr[0]
+
+    for i in range(1, len(arr)):
+        if root < arr[i]:
+            return get_postorder(arr[1:i]) + get_postorder(arr[i:]) + [root]
+    return get_postorder(arr[1:]) + [root]
+
+
+
 def solution(arr):
 
     # Tree로 시간 초과
-    tree = BinaryTree()
-    for ele in arr:
-        tree.insert(ele)
-    tree.postorder()
+    # tree = BinaryTree()
+    # for ele in arr:
+    #     tree.insert(ele)
+    # tree.postorder()
+
+    answer = get_postorder(arr)
+    for ele in answer:
+        print(ele)
 
 
 def main():
