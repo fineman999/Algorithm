@@ -23,6 +23,24 @@ def dfs(x, y, graph, cycle, cnt, R, C):
             # visited[ny][nx] = False
             cycle.remove(graph[ny][nx])
 
+def bfs(R, C, graph):
+    queue = set()
+    cycle = graph[0][0]
+    queue.add((0, 0, cycle))
+
+    global answer
+
+    while queue:
+        (x, y, visited) = queue.pop()
+        answer = max(answer, len(visited))
+        for i in range(4):
+            nx = dx[i] + x
+            ny = dy[i] + y
+            if -1 < ny < R and -1 < nx < C and graph[ny][nx] not in visited:
+                # cycle.add(graph[ny][nx])
+                # add 할때 중복된 값은 자동 제거 bfs식으로 전체적으로 넓혀감
+                queue.add((nx, ny, visited + graph[ny][nx]))
+
 
 
 def solution(R, C, graph):
@@ -35,9 +53,9 @@ def solution(R, C, graph):
     cycle = set()
     cycle.add(new_graph[0][0])
     # visited[0][0] = True
+    bfs(R, C, graph)
 
-
-    dfs(0, 0, new_graph, cycle, 1, R, C)
+    # dfs(0, 0, new_graph, cycle, 1, R, C)
 
     print(answer)
 
