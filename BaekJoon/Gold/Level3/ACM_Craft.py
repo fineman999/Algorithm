@@ -10,7 +10,6 @@ def solution(N, K, times, buildings, W, degrees):
         if degrees[i] == 0:
             heapq.heappush(heap, (0, i))
             visited[i] = times[i-1]
-
     while heap:
         cnt, node = heapq.heappop(heap)
 
