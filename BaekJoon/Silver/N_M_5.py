@@ -6,7 +6,8 @@ def dfs(N, M, sequence, cnt, temp):
         print(*temp)
         return
     for i in range(N):
-        if sequence[i] not in temp:
+        # if sequence[i] not in temp:
+        if not temp or temp[-1] <= sequence[i]:
             temp.append(sequence[i])
             dfs(N, M, sequence, cnt + 1, temp)
             temp.remove(sequence[i])
