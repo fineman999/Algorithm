@@ -11,12 +11,12 @@ def dfs(N, M, sequence, cnt, temp, visited):
         # print(*temp)
         return
     for i in range(N):
-        if not visited[i]:
+        if (not temp or temp[-1] <= sequence[i]):
             temp.append(sequence[i])
-            visited[i] = True
+            # visited[i] = True
             dfs(N, M, sequence, cnt + 1, temp, visited)
             temp.pop()
-            visited[i] = False
+            # visited[i] = False
 
 
 
