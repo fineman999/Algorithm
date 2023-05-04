@@ -59,13 +59,33 @@ def main():
     for i in range(W):
         for j in range(arr[i]):
             graph[H-j-1][i] = 1
-
     solution(H, W, graph)
 
+
+def solution2(H, W, arr):
+    answer = 0
+    for i in range(1, W-1):
+        left = max(arr[:i])
+        right = max(arr[i+1:])
+
+        tmp = min(right, left)
+        if arr[i] < tmp:
+            answer += tmp - arr[i]
+
+    print(answer)
+
+
+
+
+def main2():
+    H, W = inputs()
+    arr = list(inputs())
+    solution2(H, W, arr)
 
 def inputs():
     return map(int, sys.stdin.readline().rstrip().split())
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    main2()
