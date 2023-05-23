@@ -3,8 +3,6 @@ import sys
 from itertools import combinations
 from collections import deque
 answer = math.inf
-
-
 dx = [0, 1, 0, -1]
 dy = [1, 0, -1, 0]
 
