@@ -10,12 +10,25 @@ def dfs(i, j, N):
         else:
             dfs(i, j, N//3)
 
+def star(N):
+    if N == 1:
+        return ["*"]
+    temp = star(N//3)
+    arr = []
+
+    for s in temp:
+        arr.append(s*3)
+    for s in temp:
+        arr.append(s + ' '*(N//3) + s)
+    for s in temp:
+        arr.append(s*3)
+    return arr
+
 
 def solution(N):
-    for i in range(N):
-        for j in range(N):
-            dfs(i, j, N)
-        print()
+    temp = star(N)
+    for ele in temp:
+        print(ele)
 
 
 def main():
